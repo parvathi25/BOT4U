@@ -9,7 +9,10 @@ tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
 model = BertForSequenceClassification.from_pretrained('bert-base-uncased')
 
 # Set your Hugging Face API token
-api_key = os.getenv["HUGGINGFACEHUB_API_TOKEN"]
+api_key = os.getenv("HUGGINGFACEHUB_API_TOKEN")
+# Ensure API key is set properly
+if not api_key:
+    raise ValueError("Hugging Face API token not found. Set the environment variable 'HUGGINGFACEHUB_API_TOKEN'.")
 
 repo_id = "mistralai/Mistral-7B-Instruct-v0.3"
 # Create the language model endpoint
