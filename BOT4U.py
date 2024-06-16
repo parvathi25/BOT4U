@@ -1,12 +1,18 @@
 import streamlit as st
-from transformers import BertTokenizer, BertForSequenceClassification
-import torch
+from transformers import pipeline
 from langchain_community.llms import HuggingFaceEndpoint
 import os
 
-# Load pre-trained BERT model and tokenizer
-tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-model = BertForSequenceClassification.from_pretrained('bert-base-uncased')
+# Instantiate the sentiment analysis pipeline
+classifier = pipeline("sentiment-analysis", model="nlptown/bert-base-multilingual-uncased-sentiment")
+# Define a mapping dictionary for sentiment labels
+label_map = {
+    '5 stars': 'Positive',
+    '4 stars': 'Positive',
+    '3 stars': 'Neutral',
+    '2 stars': 'Negative',
+    '1 star': 'Negative'
+}
 
 # Set your Hugging Face API token
 api_key = os.getenv("HUGGINGFACEHUB_API_TOKEN")
@@ -43,16 +49,10 @@ elif selected_section == "Sentiment Analysis":
 
     if st.button("Analyze"):
         if sentence:
-            # Tokenize input text
-            inputs = tokenizer(sentence, return_tensors='pt')
-
             # Perform sentiment analysis
-            with torch.no_grad():
-                outputs = model(**inputs)
-
-            # Get predicted sentiment (0: negative, 1: positive)
-            prediction = torch.argmax(outputs.logits, dim=1).item()
-
+            result = classifier(sentence)
+            # Extract sentiment label and map to 'Positive' or 'Negative'
+            sentiment_label = result[0]['label']
+            sentiment = label_map.get(sentiment_label, 'Unknown')
             # Display result
-            sentiment = "Positive" if prediction == 1 else "Negative"
             st.write(f"The sentiment of the sentence '{sentence}' is: {sentiment}")
