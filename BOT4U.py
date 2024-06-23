@@ -35,3 +35,22 @@ elif selected_section == "Sentiment Analysis":
     st.header('Sentiment Analysis')
 
     sentence = st.text_area("Enter a sentence for sentiment analysis")
+
+    if st.button("Analyze"):
+        if sentence:
+            # Prepare a prompt for Mistral to analyze sentiment
+            prompt = f"Analyze the sentiment of this sentence and classify it as Positive, Negative, or Neutral: '{sentence}'"
+            response = llm(prompt)
+
+            # Extract sentiment from the response
+            if "Positive" in response:
+                sentiment = "Positive"
+            elif "Negative" in response:
+                sentiment = "Negative"
+            elif "Neutral" in response:
+                sentiment = "Neutral"
+            else:
+                sentiment = "Unknown"
+
+            # Display result
+            st.write(f"The sentiment of the sentence '{sentence}' is: {sentiment}")
