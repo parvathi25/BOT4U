@@ -20,16 +20,19 @@ llm = HuggingFaceEndpoint(
 st.title('BOT4U')
 
 # Sidebar menu for navigation
-selected_section = st.sidebar.radio("Navigation", ["Text Generation", "Sentiment Analysis"])
+selected_section = st.sidebar.radio("Navigation", ["Text Generation", "Sentiment Analysis", "Text Summarizer"])
 
 if selected_section == "Text Generation":
     st.header('Text Generation')
 
     prompt = st.text_input("Enter your prompt")
-
-    if prompt:
-        generated_text = llm(prompt)
-        st.write(generated_text)
+    
+    if st.button("Generate"):
+        if prompt:
+            generated_text = llm(prompt)
+            st.write(generated_text)
+        else:
+            st.write("Prompt not entered")
 
 elif selected_section == "Sentiment Analysis":
     st.header('Sentiment Analysis')
@@ -54,3 +57,20 @@ elif selected_section == "Sentiment Analysis":
 
             # Display result
             st.write(f"The sentiment of the sentence '{sentence}' is: {sentiment}")
+        else:
+            st.write("Sentence not entered")
+
+elif selected_section == "Text Summarizer":
+    st.header('Text Summarizer')
+
+    long_text = st.text_area("Enter text to summarize")
+
+    if st.button("Summarize"):
+        if long_text:
+            # Use the Mistral model for summarization
+            summarization_prompt = f"Summarize the following text: '{long_text}'"
+            summary = llm(summarization_prompt)
+            # Display the summary
+            st.write(summary)
+        else:
+            st.write("Text not entered")
