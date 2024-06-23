@@ -3,7 +3,7 @@ from langchain_community.llms import HuggingFaceEndpoint
 import os
 
 # Set your Hugging Face API token
-api_key = os.getenv("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")
+api_key = os.getenv("HUGGINGFACEHUB_API_TOKEN")
 # Ensure API key is set properly
 if not api_key:
     raise ValueError("Hugging Face API token not found. Set the environment variable 'HUGGINGFACEHUB_API_TOKEN'.")
